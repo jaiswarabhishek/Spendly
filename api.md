@@ -2,10 +2,6 @@
 
 This API allows you to manage expenses and incomes, retrieve transactions, and gather data for dashboards. Below are the endpoints, request methods, and sample usage for each feature.
 
-## Base URL
-[text](http://localhost:3000/api/)
-
-
 ---
 
 ## 1. **Create Expense**
