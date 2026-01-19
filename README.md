@@ -4,9 +4,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 Check out the demo video to see Spendly in action:
 
-[![Watch the Demo](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID/maxresdefault.jpg)](ai_spendly_demo.mp4)
+[![Watch the Demo](./ai_spendly_demo.mp4)]
 
-[Download Demo Video](./ai_spendly_demo.mp4)
 
 ## Getting Started
 
