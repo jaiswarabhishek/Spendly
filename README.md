@@ -4,7 +4,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 Check out the demo video to see Spendly in action:
 
-[![Watch the Demo](./ai_spendly_demo.mp4)]
+[![Watch the Demo](https://github.com/jaiswarabhishek/Spendly/blob/main/ai_spendly_demo.mp4)]
+
 
 
 ## Getting Started
