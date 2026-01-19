@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Demo
+
+Check out the demo video to see Spendly in action:
+
+[![Watch the Demo](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID/maxresdefault.jpg)](ai_spendly_demo.mp4)
+
+[Download Demo Video](./ai_spendly_demo.mp4)
+
 ## Getting Started
 
 First, run the development server:

@@ -1,0 +1,122 @@
+!pip install pandas numpy matplotlib prophet scikit-learn
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from prophet import Prophet
+
+# Load your dataset (replace 'your_expense_data.csv' with your file path)
+df = pd.read_csv('my_expense_data.csv')
+
+# Rename columns to match Prophet format
+df.rename(columns={'date': 'ds', 'amount': 'y'}, inplace=True)
+
+# Parse the dates correctly
+df['ds'] = pd.to_datetime(df['ds'])
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Step 1: Load Data from CSV
+# Replace 'actual_expense.csv' with the path to your CSV file
+df = pd.read_csv('my_expense_data.csv')
+
+# Assuming the CSV has a structure like this:
+# expense_amount
+# 200
+# 220
+# 180
+
+# Step 2: Calculate Outliers using the IQR method
+Q1 = df['amount'].quantile(0.25)
+Q3 = df['amount'].quantile(0.75)
+IQR = Q3 - Q1
+
+# Define upper and lower bounds
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Step 3: Identify Outliers
+df['is_outlier'] = np.where((df['amount'] < lower_bound) | (df['amount'] > upper_bound), True, False)
+
+# Print Outliers
+outliers = df[df['is_outlier']]
+print("Outliers:")
+print(outliers[['amount']])
+
+# Step 4: Remove Outliers
+df_cleaned = df[df['is_outlier'] == False]
+
+# Optional: Reset index for the cleaned DataFrame
+df_cleaned.reset_index(drop=True, inplace=True)
+
+# Print cleaned DataFrame
+print("\nCleaned Data (without outliers):")
+print(df_cleaned[['amount']])
+
+# Step 5: Visualize Outliers and Cleaned Data
+plt.figure(figsize=(12, 6))
+plt.plot(df.index, df['amount'], label='Expenses', color='blue', alpha=0.5)
+plt.scatter(outliers.index, outliers['amount'], color='red', label='Outliers', marker='o')
+plt.axhline(upper_bound, color='red', linestyle='--', label='Upper Bound')
+plt.axhline(lower_bound, color='red', linestyle='--', label='Lower Bound')
+plt.title('Outlier Detection and Removal in Expense Data')
+plt.xlabel('Index')
+plt.ylabel('Expense Amount')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# Optional: Visualize Cleaned Data
+plt.figure(figsize=(12, 6))
+plt.plot(df_cleaned.index, df_cleaned['amount'], label='Cleaned Expenses', color='green', alpha=0.7)
+plt.title('Cleaned Expense Data (without Outliers)')
+plt.xlabel('Index')
+plt.ylabel('Expense Amount')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+# Calculate IQR for outlier detection
+df.rename(columns={'date': 'ds', 'amount': 'y'}, inplace=True)
+
+Q1 = df['y'].quantile(0.25)
+Q3 = df['y'].quantile(0.75)
+IQR = Q3 - Q1
+
+# Define outlier range
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Remove outliers
+df_cleaned = df[(df['y'] >= lower_bound) & (df['y'] <= upper_bound)]
+
+
+# Checking for missing values
+df_cleaned.isna().sum()
+
+# If missing, fill missing values (you can also drop or impute based on your data)
+df_cleaned = df_cleaned.fillna(method='ffill')  # Forward fill
+
+train_df, test_df = train_test_split(df_cleaned, test_size=0.2, shuffle=False)
+
+# Initialize Prophet model
+model = Prophet(changepoint_prior_scale=0.1, seasonality_prior_scale=10.0) # this giving a better performance
+
+# Fit the model
+model.fit(train_df)
+
+# Future dataframe for predictions (extend into the future)
+future_dates = model.make_future_dataframe(periods=11)
+
+# Make predictions
+forecast = model.predict(future_dates)
+
+
+
+from prophet.plot import plot_plotly, plot_components_plotly
+
+plot_plotly(model, forecast)

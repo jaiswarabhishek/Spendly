@@ -1,8 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import Calculator from "@/custom/components/Calculator"
 import { Button } from "@/components/ui/button"
+import { expenseCategories } from "@/data/Utils"
+import { Loader2 } from "lucide-react"
 import {
   Form,
   FormControl,
@@ -50,46 +53,62 @@ import {
 
 
 const FormSchema = z.object({
-  expenseTitle : z.string().min(3 , {message : 'Title must be atleast 3 characters long'}),
-  expenseAmount : z.string(),
+  title : z.string().min(3 , {message : 'Title must be atleast 3 characters long'}),
+  amount : z.string(),
   date: z.string().date(),
   category: z.string().min(3 , {message : 'Category must be atleast 3 characters long'}),
   description: z.string().min(3 , {message : 'Description must be atleast 3 characters long'}),
 })
 
-const expenseCategories = [
-  "Housing",  
-  "Transportation",
-  "Food",
-  "Utilities",
-  "Entertainment",
-  "Clothing",
-  "Medical & Healthcare",
-  "Household Items/Supplies",
-  "Education",
-  "Gifts",
-  "Personal Spending",
-  "Savings",
-  "Other"
-]
+let loader = false;
 
 export function index() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      expenseTitle: "",
-      expenseAmount: "",
+      title: "",
+      amount: "",
       date: new Date().toISOString(),
       category: "",
       description: "",
     },
   })
+  
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    //  toast({
-    //       title: "Expense Added Successfully",
-    //     })
+
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+
+    // console.log(data)
+    loader=true;
+    const response = await fetch('/api/expenses', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify(data),
+    })
+    loader=false;
+
+    if ((await response).ok) {
+      toast({
+        variant: "success",
+        title: "Expense added successfully",
+        description: "Your expense has been added successfully.",
+      })
+      
+      form.reset()
+    }
+    else{
+      toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your request.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+    }
+
   }
 
   return (
@@ -100,7 +119,7 @@ export function index() {
       <div className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
-          name="expenseTitle"
+          name="title"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Title</FormLabel>
@@ -114,7 +133,7 @@ export function index() {
 
         <FormField
           control={form.control}
-          name="expenseAmount"
+          name="amount"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Amount</FormLabel>
@@ -187,9 +206,9 @@ export function index() {
         />
         </div>
 
-        <AlertDialog>
+        {/* <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button type="submit" className="bg-indigo-700 text-white hover:bg-slate-200 hover:text-black">
+        <Button type="submit" className="bg-primary text-popover hover:bg-slate-200 hover:text-black">
           Add Expense
         </Button>
         </AlertDialogTrigger>
@@ -203,8 +222,8 @@ export function index() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  <p>Title: {form.watch('expenseTitle')}</p>
-                  <p>Amount: {form.watch('expenseAmount')}</p>
+                  <p>Title: {form.watch('title')}</p>
+                  <p>Amount: {form.watch('amount')}</p>
                   <p>Date: {form.watch('date')}</p>
                   <p>Category: {form.watch('category')}</p>
                   <p>Description: {form.watch('description')}</p>
@@ -218,12 +237,16 @@ export function index() {
           <AlertDialogCancel className="w-1/2">
             Edit
           </AlertDialogCancel>
-          <AlertDialogAction className="w-1/2 bg-indigo-700 ">
+          <AlertDialogAction className="w-1/2 bg-primary ">
             Confirm
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialog>
+       </AlertDialog> */}
+
+        <Button disabled={loader} type="submit" className="bg-primary text-popover hover:bg-slate-200 hover:text-black">
+        {loader? <Loader2 size={20} className="animate-spin" /> :  "Add Expense"}
+        </Button>
       </form>
     </Form>
 

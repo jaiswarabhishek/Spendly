@@ -4,6 +4,13 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useState ,useEffect} from "react"
 import { IndianRupee } from "lucide-react"
+import { expenseCategories } from "@/data/Utils"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 
 import { Button } from "@/components/ui/button"
 import {
@@ -33,29 +40,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import TableData from "./TableData"
 
-
-
-// Expense Calculator
-const expenseCategories = [
-  "Housing",  
-  "Transportation",
-  "Food",
-  "Utilities",
-  "Entertainment",
-  "Clothing",
-  "Medical & Healthcare",
-  "Household Items/Supplies",
-  "Education",
-  "Gifts",
-  "Personal Spending",
-  "Savings",
-  "Other"
-]
 
 const FormSchema = z.object({
   category: z.string(),
-  itemAmount: z.string()
+  itemAmount: z.string(),
+  item:z.string()
 })
 
 
@@ -66,8 +57,8 @@ export function Calculator() {
     resolver: zodResolver(FormSchema),
   })
 
-  const [totalExpense, setTotalExpense] = useState<{ category: string; itemAmount: string; }[]>([])
-  const [categoryTotals, setCategoryTotals] = useState<{ category: string; itemAmount: string; }[]>([])
+  const [totalExpense, setTotalExpense] = useState<{ category: string; itemAmount: string;item:string }[]>([])
+  const [categoryTotals, setCategoryTotals] = useState<{ category: string; itemAmount: string;item:string[] }[]>([])
 
 
 
@@ -91,6 +82,7 @@ export function Calculator() {
               ? {
                   ...item,
                   itemAmount: (parseInt(item.itemAmount) + parseInt(lastExpense.itemAmount)).toString(),
+                  item: [...item.item , lastExpense.item]
                 }
               : item
           )
@@ -99,7 +91,7 @@ export function Calculator() {
         // Add a new category with the total
         setCategoryTotals((prevTotals) => [
           ...prevTotals,
-          { category: lastExpense.category, itemAmount: lastExpense.itemAmount },
+          { category: lastExpense.category, itemAmount: lastExpense.itemAmount,item:[lastExpense.item] },
         ]);
       }
     }
@@ -110,11 +102,13 @@ export function Calculator() {
     calculateTotalExpense();
   }, [totalExpense]);
 
+  
 
+ console.log(categoryTotals)
   return (
   <div>
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 mt-10 grid grid-cols-3 gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-10 grid grid-cols-4 gap-4">
       
         <FormField
           control={form.control}
@@ -143,6 +137,18 @@ export function Calculator() {
 
         <FormField
           control={form.control}
+          name="item"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Enter Item" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
           name="itemAmount"
           render={({ field }) => (
             <FormItem>
@@ -153,8 +159,8 @@ export function Calculator() {
           )}
         />
 
-        <Button type="submit" className="bg-indigo-700 text-white hover:bg-slate-200 hover:text-black">Add</Button>
-        {/* <Button type="button" onClick={()=> calculateTotalExpense()} className="bg-indigo-700 text-white hover:bg-slate-200 hover:text-black" >Calculate</Button> */}
+        <Button type="submit" className="bg-primary text-popover hover:bg-slate-200 hover:text-black">Add</Button>
+        {/* <Button type="button" onClick={()=> calculateTotalExpense()} className="bg-primary text-popover hover:bg-slate-200 hover:text-black" >Calculate</Button> */}
       </form>
     </Form>
 
@@ -168,8 +174,15 @@ export function Calculator() {
         <CardContent >
           {categoryTotals.map((item, index) => (
             <CardDescription key={index}>
-              <div className="flex justify-between">
-                <span className="text-md">{item.category}</span>
+              <div className="flex justify-between mb-2">
+                <Popover>
+                     <PopoverTrigger asChild>
+                 <Button variant="outline" className="text-md">{item.category}</Button>
+                    </PopoverTrigger>
+                  <PopoverContent className="w-80">
+                     {item.item.join(", ")}
+                  </PopoverContent>
+                </Popover>
                 <span className="flex items-center text-md"><IndianRupee className="w-3 h-3"/> {Number(item.itemAmount).toLocaleString()}</span>
               </div>
             </CardDescription>
@@ -186,6 +199,9 @@ export function Calculator() {
           </div>
         </CardFooter>
       </Card>
+
+      
+
       }
     </div>
 

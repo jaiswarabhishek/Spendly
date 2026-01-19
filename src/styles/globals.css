@@ -10,7 +10,7 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 244.5 57.9% 50.6%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -26,9 +26,25 @@
     --radius: 0.5rem;
     --chart-1: 244.5 57.9% 50.6%;
     --chart-2: 173 58% 39%;
-    --chart-3: 0 72.2% 50.6%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-3: 85.9 78.4% 27.3%;
+    --chart-4: 175.3 77.4% 26.1%;
+    --chart-5: 192.9 82.3% 31%;
+    --chart-6: 263.4 70% 50.4%;
+    --chart-7: 156.2 71.6% 66.9%;
+    --chart-8: 294.7 72.4% 39.8%;
+    --chart-9: 335.1 77.6% 42%;
+    --chart-10: 345.3 82.7% 40.8%;
+    --chart-11: 296.8 90.2% 16.1%;
+    --chart-12: 20.5 90.2% 48.2%;
+    --chart-13: 0 84.2% 60.2%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -56,6 +72,14 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -67,3 +91,5 @@
     @apply bg-background text-foreground;
   }
 }
+
+ .percentage .tooltip-value::after { content:"%"; }
